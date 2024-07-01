@@ -12,11 +12,15 @@ LANGUAGE=$7
 ID_COLUMN_NAME=$8
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-OUTPUT_DIR="${SCRIPT_DIR}/../tmp/${DATASET_NAME}_${LANGUAGE}_pseudo_labelled"
-LOG_FILE="${SCRIPT_DIR}/../logs/log_pseudo_labelling_$(date +%Y-%m-%d_%H-%M-%S).txt"
+PARENT_DIR="$(dirname "$SCRIPT_DIR")"
+OUTPUT_DIR="${PARENT_DIR}/tmp/${DATASET_NAME}_${LANGUAGE}_pseudo_labelled"
+LOG_FILE="${PARENT_DIR}/logs/logs_pseudo_labelling_$(date +%Y-%m-%d_%H-%M-%S).txt"
 
-accelerate launch --config_file "${SCRIPT_DIR}/../accelerate-configs/1gpu_config.yaml" \
-"${SCRIPT_DIR}/../distil-whisper/training/run_pseudo_labelling.py" \
+mkdir -p "${PARENT_DIR}/tmp"
+mkdir -p "${PARENT_DIR}/logs"
+
+accelerate launch --config_file "${PARENT_DIR}/accelerate-configs/1gpu_config.yaml" \
+"${PARENT_DIR}/distil-whisper/training/run_pseudo_labelling.py" \
   --model_name_or_path "$MODEL_NAME_OR_PATH" \
   --dataset_name "$DATASET_NAME" \
   --dataset_config_name "$DATASET_CONFIG_NAME" \
