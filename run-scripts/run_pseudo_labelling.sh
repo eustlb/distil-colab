@@ -18,6 +18,7 @@ LOG_FILE="${PARENT_DIR}/logs/logs_pseudo_labelling_$(date +%Y-%m-%d_%H-%M-%S).tx
 
 mkdir -p "${PARENT_DIR}/tmp"
 mkdir -p "${PARENT_DIR}/logs"
+export HF_DATASETS_CACHE="/data/.cache"
 
 accelerate launch --config_file "${PARENT_DIR}/accelerate-configs/1gpu_config.yaml" \
 "${PARENT_DIR}/distil-whisper/training/run_pseudo_labelling.py" \
@@ -38,7 +39,7 @@ accelerate launch --config_file "${PARENT_DIR}/accelerate-configs/1gpu_config.ya
   --concatenate_audio \
   --preprocessing_batch_size 500 \
   --preprocessing_num_workers 48 \
-  --dataloader_num_workers 8 \
+  --dataloader_num_workers 0 \
   --report_to "wandb" \
   --language "$LANGUAGE" \
   --task "transcribe" \
