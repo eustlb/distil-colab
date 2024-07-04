@@ -4,36 +4,43 @@
 
 MODEL_NAME_OR_PATH=$1
 TRAIN_DATASET_NAME=$2
-TRAIN_SPLIT_NAME=$3
-TEXT_COLUMN_NAME=$4
-EVAL_DATASET_NAME=$5
-EVAL_SPLIT_NAME=$6
-EVAL_TEXT_COLUMN_NAME=$7
-WARMUP_STEPS=$8
-LEARNING_RATE=$9
-TIMESTAMP_PROBABILITY=${10}
-CONDITION_ON_PREV_PROBABILITY=${11}
-LANGUAGE=${12}
-MAX_STEPS=${13}
-WER_THRESHOLD=${14}
-PER_DEVICE_TRAIN_BATCH_SIZE=${15}
-PER_DEVICE_EVAL_BATCH_SIZE=${16}
-DATALOADER_NUM_WORKERS=${17}
-OUTPUT_DIR=${18}
-WANDB_NAME=${19}
+TRAIN_DATASET_CONFIG_NAME=$3
+TRAIN_SPLIT_NAME=$4
+TEXT_COLUMN_NAME=$5
+EVAL_DATASET_NAME=$6
+EVAL_DATASET_CONFIG_NAME=$7
+EVAL_SPLIT_NAME=$8
+EVAL_TEXT_COLUMN_NAME=$9
+WARMUP_STEPS=${10}
+LEARNING_RATE=${11}
+TIMESTAMP_PROBABILITY=${12}
+CONDITION_ON_PREV_PROBABILITY=${13}
+LANGUAGE=${14}
+MAX_STEPS=${15}
+WER_THRESHOLD=${16}
+PER_DEVICE_TRAIN_BATCH_SIZE=${17}
+PER_DEVICE_EVAL_BATCH_SIZE=${18}
+DATALOADER_NUM_WORKERS=${19}
+OUTPUT_DIR=${20}
+WANDB_NAME=${21}
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-LOG_FILE="${SCRIPT_DIR}/logs/log_training_$(date +%Y-%m-%d_%H-%M-%S).txt"
+PARENT_DIR="$(dirname "$SCRIPT_DIR")"
+LOG_FILE="${PARENT_DIR}/logs/logs_training_$(date +%Y-%m-%d_%H-%M-%S).txt"
 
-accelerate launch --config_file "${SCRIPT_DIR}/../accelerate-configs/1gpu_config.yaml" \
-"${SCRIPT_DIR}/../distil-whisper/training/run_distillation.py" \
+mkdir -p "${PARENT_DIR}/logs"
+
+accelerate launch --config_file "${PARENT_DIR}/accelerate-configs/1gpu_config.yaml" \
+"${PARENT_DIR}/distil-whisper/training/run_distillation.py" \
   --model_name_or_path "$MODEL_NAME_OR_PATH" \
   --teacher_model_name_or_path "openai/whisper-large-v3" \
   --train_dataset_name "$TRAIN_DATASET_NAME" \
   --train_split_name "$TRAIN_SPLIT_NAME" \
+  --train_dataset_config_name "$TRAIN_DATASET_CONFIG_NAME" \
   --text_column_name "$TEXT_COLUMN_NAME" \
   --eval_dataset_name "$EVAL_DATASET_NAME" \
   --eval_split_name "$EVAL_SPLIT_NAME" \
+  --eval_dataset_config_name "$EVAL_DATASET_CONFIG_NAME" \
   --eval_text_column_name "$EVAL_TEXT_COLUMN_NAME" \
   --eval_steps 1000 \
   --save_steps 1000 \
