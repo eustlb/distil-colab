@@ -46,5 +46,5 @@ accelerate launch --config_file "${PARENT_DIR}/accelerate-configs/1gpu_config.ya
   --return_timestamps \
   --streaming True \
   --generation_num_beams 1 \
-  --push_to_hub True \
+  --push_to_hub False \
   --ddp_timeout 7200 >"$LOG_FILE" 2>&1
