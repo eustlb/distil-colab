@@ -39,7 +39,7 @@ accelerate launch --config_file "${PARENT_DIR}/accelerate-configs/1gpu_config.ya
   --concatenate_audio \
   --preprocessing_batch_size 500 \
   --preprocessing_num_workers 48 \
-  --dataloader_num_workers 0 \
+  --dataloader_num_workers 1 \
   --report_to "wandb" \
   --language "$LANGUAGE" \
   --task "transcribe" \
